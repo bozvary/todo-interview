@@ -1,0 +1,21 @@
+const aggregationPipeline = [
+  {
+    $lookup: {
+      from: 'tasks',
+      localField: 'tasks',
+      foreignField: '_id',
+      as: 'taskDetails'
+    }
+  },
+  {
+    $match: { name: projectName }
+  },
+  {
+    $project: {
+      _id: 0, // Exclude _id from each project for security,
+      'taskDetails._id': 0 // Exclude _id from each task in taskDetails for security,
+    }
+  }
+];
+
+const taskDetails = await this.collection.aggregate(aggregationPipeline).toArray();

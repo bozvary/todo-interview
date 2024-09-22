@@ -18,6 +18,8 @@ const createProjectRoutes = (db) => {
   router.post('/:currentProjectId/move/:newProjectId/tasks/:taskId', controller.moveTaskToProject.bind(controller));
 
   router.get('/tasks/projectName/:projectName', controller.getTasksByProjectName.bind(controller));
+  router.get('/tasks/projectName2/:projectName', controller.getTasksByProjectName2.bind(controller));
+
   router.get('/tasks/projectId/:projectId', controller.getTasksByProjectId.bind(controller));
   
   // Validate the request with the projectSchema to prevent injecting invalid data

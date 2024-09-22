@@ -12,8 +12,6 @@ doneDate
 createdAt
 updatedAt
 
-
-
 */
 
 class Task {
@@ -39,6 +37,10 @@ class Task {
     return this.taskCollection.findOne({ _id: new ObjectId(id) });
   }
 
+  async find(query) {
+    return await this.taskCollection.find(query);
+  }
+
   async filterByName(query) {
     return await this.taskCollection.find(query).toArray();
   }
@@ -46,7 +48,6 @@ class Task {
   async update(id, updateData) {
     // TODO: we can add updatedBy field if we define user layer
     updateData.updatedAt = new Date();
-
     
     // reset a task from “done” to “to-do”, should reset “start” and “done” dates
     // TODO: addition: manage it as a transaction because probably we need multiple updates if we connect projects and users.
@@ -83,6 +84,7 @@ class Task {
       { $set: { status, ...updateFields } }
     );
   }
+
 }
 
 module.exports = Task;

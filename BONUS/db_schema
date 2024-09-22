@@ -1,0 +1,72 @@
+// We can use schema validation, based on the Joi validator config
+db.createCollection("projects_validated", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name", "description"],
+      properties: {
+        name: {
+          bsonType: "string",
+          minLength: 1,
+          maxLength: 255,
+          description: "must be a string and is required"
+        },
+        description: {
+          bsonType: "string",
+          minLength: 1,
+          maxLength: 255,
+          description: "must be a string and is required"
+        },
+        status: {
+          bsonType: "string",
+          enum: ["to-do", "done", "in-progress"],
+          description: "must be one of 'to-do' or 'done', defaults to 'to-do'"
+        },
+        tasks: {
+          bsonType: "array",
+          description: "must be an array of task IDs"
+        }
+      }
+    }
+  }
+});
+
+db.createCollection("tasks_validated", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name", "description"],
+      properties: {
+        name: {
+          bsonType: "string",
+          minLength: 1,
+          maxLength: 255,
+          description: "must be a string and is required"
+        },
+        description: {
+          bsonType: "string",
+          minLength: 1,
+          maxLength: 255,
+          description: "must be a string and is required"
+        },
+        status: {
+          bsonType: "string",
+          enum: ["to-do", "done"],
+          description: "must be one of 'to-do' or 'done', defaults to 'to-do'"
+        },
+        startDate: {
+          bsonType: "date",
+          description: "must be a valid date"
+        },
+        dueDate: {
+          bsonType: "date",
+          description: "must be a valid date and greater than startDate"
+        },
+        doneDate: {
+          bsonType: "date",
+          description: "must be a valid date"
+        }
+      }
+    }
+  }
+});

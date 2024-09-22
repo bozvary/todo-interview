@@ -6,6 +6,7 @@ const { ObjectId } = require('mongodb');
 class ProjectController {
   constructor(model) {
     this.model = model;
+    // use taskModel or aggregation, for aggregation approach see BONUS. It has an advantage and disadvantage too.
     this.taskModel = new Task(model.collection.client.db(model.collection.client.db().databaseName));
   }
 
@@ -96,7 +97,8 @@ class ProjectController {
       }
 
       const taskIds = project.tasks.map(id => new ObjectId(id)); // Convert string IDs to ObjectId, because we want to fetch by _id 
-      const tasks = await this.taskModel.find({ _id: { $in: taskIds } }).toArray(); // Fetching tasks using their IDs from taskModel   
+      const tasksR = await this.taskModel.find({ _id: { $in: taskIds } })
+      const tasks = await tasksR.toArray(); // Fetching tasks using their IDs from taskModel   
       // Return the tasks associated with the project
       res.status(200).send(tasks);
     } catch (error) {
@@ -104,6 +106,18 @@ class ProjectController {
       res.status(500).send({ error: 'Failed to fetch tasks' });
     }
   }
+
+  async getTasksByProjectName2(req, res) {
+    const { projectName } = req.params;
+    try {
+      const tasks = await this.model.getTasksByProjectName(projectName);
+      res.status(200).send(tasks);
+    } catch (error) {
+      console.error(error)
+      res.status(500).send({ error: 'Failed to fetch tasks' });
+    }
+  }
+  
 
   async getTasksByProjectId(req, res) {
     const { projectId } = req.params;

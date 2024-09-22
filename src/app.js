@@ -19,6 +19,7 @@ setupSwagger(app);
 MongoClient.connect(process.env.MONGODB_URI)
   .then(client => {
     const db = client.db('todoList');
+
     // This can be organised in a differnet way
     app.use('/api/v1/tasks', createTaskRoutes(db));
 

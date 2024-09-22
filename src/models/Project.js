@@ -17,7 +17,7 @@ tasks []
 class Project {
   constructor(db) {
     // Define a property that connected to the 'projects' collection
-    this.collection = db.collection('projects');
+    this.collection = db.collection('projects');    
   }
 
   async create(projectData) {
@@ -39,6 +39,37 @@ class Project {
 
   async findOne(query) {
     return this.collection.findOne(query);
+  }
+
+  async getTasksByProjectName(projectName) {
+    try {
+      const aggregationPipeline = [
+        {
+          $lookup: {
+            from: 'tasks',
+            localField: 'tasks',
+            foreignField: '_id',
+            as: 'taskDetails'
+          }
+        },
+        {
+          $match: { name: projectName }
+        },
+        {
+          $project: {
+            _id: 0, // Exclude _id from each project for security,
+            'taskDetails._id': 0 // Exclude _id from each task in taskDetails for security,
+          }
+        }
+      ];
+
+      const taskDetails = await this.collection.aggregate(aggregationPipeline).toArray();
+      return taskDetails[0]['taskDetails'];
+
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: 'Failed to fetch tasks' });
+    }
   }
 
   async update(id, updateData) {
@@ -71,6 +102,7 @@ class Project {
     return this.collection.updateOne(
       { _id: new ObjectId(projectId) },
       { $addToSet: { tasks: taskId } } 
+      /*{ $addToSet: { tasks: new ObjectId(taskId) } } */
     );
   }
 
@@ -84,6 +116,7 @@ class Project {
           { _id: new ObjectId(currentProjectId), tasks: taskId },
           { session }
       );
+      /*tasks: new ObjectId(taskId)*/
 
       if (!currentProject) {
           throw new Error(`Project with id ${currentProjectId} does not exist or does not contain task ${taskId}`);
@@ -104,6 +137,7 @@ class Project {
         { _id: new ObjectId(currentProjectId) },
         { $pull: { tasks: taskId } },
         { session }
+        /*{ $pull: { tasks: new ObjectId(taskId) } } */
       );
 
       // Add task to new project
@@ -111,6 +145,7 @@ class Project {
         { _id: new ObjectId(newProjectId) },
         { $addToSet: { tasks: taskId } },
         { session }
+        /*{ $addToSet: { tasks: new ObjectId(taskId) } } */
       );
 
       await session.commitTransaction();
