@@ -17,6 +17,7 @@ const createTaskRoutes = (db) => {
   router.post('/', taskController.validateRequest(taskSchema), taskController.create.bind(taskController));
   // We can use validator to define a schema for the query adn validate the input to prevent various vulnerabilities, e.g. invalid input, injection attacks, data integrity, limit, performance issue. 
   router.get('/', taskController.getAll.bind(taskController));
+  router.get('/filter-by-name/:taskName', taskController.filterByName.bind(taskController));
   // Validate the request, we can restrict some update by key if we do not want to provide ability to change e.g. status for status changes use the 'status' endpoint
   router.put('/:id', taskController.validateRequest(schemaUpdate), taskController.update.bind(taskController));
   router.delete('/:id', taskController.delete.bind(taskController));

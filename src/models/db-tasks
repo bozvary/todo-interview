@@ -15,16 +15,16 @@ create a new MongoDB collection: tasks
 ✅  iii. done date
 
 
-1. create a new MongoDB collection: projects
-2. define data structure for MongoDB documents in projects collection (according to requirements below)
-3. create endpoints w/ NodeJS and express to:
-a. create a project
-b. list all projects
-c. edit a project
-d. delete a project
-4. assign a task to a project
-5. filter tasks by project name
-6. sort projects by dates
-a. start date
-b. due date
+✅ 1. create a new MongoDB collection: projects
+✅ 2. define data structure for MongoDB documents in projects collection (according to requirements below)
+✅ 3. create endpoints w/ NodeJS and express to:
+✅ a. create a project
+✅ b. list all projects
+✅ c. edit a project
+✅ d. delete a project
+✅ 4. assign a task to a project
+✅ 5. filter tasks by project name
+✅ 6. sort projects by dates
+✅ 	a. start date
+✅ 	b. due date
 

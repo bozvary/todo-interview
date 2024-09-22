@@ -1,8 +1,12 @@
 // controllers/ProjectController.js
 
+const Task = require('../models/Task');
+const { ObjectId } = require('mongodb');
+
 class ProjectController {
   constructor(model) {
     this.model = model;
+    this.taskModel = new Task(model.collection.client.db(model.collection.client.db().databaseName));
   }
 
   isValidObjectId(id) {
@@ -73,6 +77,56 @@ class ProjectController {
     } catch (error) {
       console.error(error)
       res.status(500).send({ error: 'Failed to fetch projects' });
+    }
+  }
+
+  async getTasksByProjectName(req, res) {
+    const { projectName } = req.params;
+    /*const encodedProjectName = decodeURIComponent(projectName);
+    const query = {
+      name: { $regex: encodedProjectName, $options: 'i' }
+    }*/
+
+    try {
+      // Find the project by name
+      const project = await this.model.findOne({ name: projectName })
+
+      if (!project) {
+        return res.status(404).send({ error: 'Project not found' });
+      }
+
+      const taskIds = project.tasks.map(id => new ObjectId(id)); // Convert string IDs to ObjectId, because we want to fetch by _id 
+      const tasks = await this.taskModel.find({ _id: { $in: taskIds } }).toArray(); // Fetching tasks using their IDs from taskModel   
+      // Return the tasks associated with the project
+      res.status(200).send(tasks);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: 'Failed to fetch tasks' });
+    }
+  }
+
+  async getTasksByProjectId(req, res) {
+    const { projectId } = req.params;
+    // Validate the ID
+    if (!this.isValidObjectId(projectId)) {
+      return res.status(400).send({ error: 'Invalid ID format. ID must be a 24-character hex string.' });
+    }
+
+    try {
+      // Find the project by projectId
+      const project = await this.model.findOne({ _id: new ObjectId(projectId) })
+
+      if (!project) {
+        return res.status(404).send({ error: 'Project not found' });
+      }
+
+      const taskIds = project.tasks.map(id => new ObjectId(id)); // Convert string IDs to ObjectId, because we want to fetch by _id 
+      const tasks = await this.taskModel.find({ _id: { $in: taskIds } }).toArray(); // Fetching tasks using their IDs from taskModel   
+      // Return the tasks associated with the project
+      res.status(200).send(tasks);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: 'Failed to fetch tasks' });
     }
   }
 

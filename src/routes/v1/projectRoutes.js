@@ -8,15 +8,18 @@ const { schema: projectSchema, schemaUpdate: schemaUpdate } = require('../../val
 const createProjectRoutes = (db) => {
   const router = express.Router();
   // Create a projectModel by passing the DB instance to the constructur, so we can use the conencted db instance
-  const projectModel = new Project(db);
+  const projectModel = new Project(db);  
   // Passing the projectModel to the ProjectController
   // Project Controller manages the CRUD operations and extra functionialities
   const controller = new ProjectController(projectModel);
-
   // Assign atask to project
   router.post('/:projectId/tasks/:taskId', controller.assignTaskToProject.bind(controller));
   // Move Task from one project to another
   router.post('/:currentProjectId/move/:newProjectId/tasks/:taskId', controller.moveTaskToProject.bind(controller));
+
+  router.get('/tasks/projectName/:projectName', controller.getTasksByProjectName.bind(controller));
+  router.get('/tasks/projectId/:projectId', controller.getTasksByProjectId.bind(controller));
+  
   // Validate the request with the projectSchema to prevent injecting invalid data
   router.post('/', controller.validateRequest(projectSchema), controller.create.bind(controller));
   // We can use validator to define a schema for the query adn validate the input to prevent various vulnerabilities, e.g. invalid input, injection attacks, data integrity, limit, performance issue. 

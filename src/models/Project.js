@@ -37,6 +37,10 @@ class Project {
     return this.collection.findOne({ _id: new ObjectId(id) });
   }
 
+  async findOne(query) {
+    return this.collection.findOne(query);
+  }
+
   async update(id, updateData) {
     // TODO: we can add updatedBy field if we define user layer
     updateData.updatedAt = new Date();

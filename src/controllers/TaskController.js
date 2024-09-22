@@ -77,6 +77,22 @@ class TaskController {
     }
   }
 
+  async filterByName(req, res) {
+    const { taskName } = req.params;
+    const encodedtaskName = decodeURIComponent(taskName);
+    const query = {
+      name: { $regex: encodedtaskName, $options: 'i' }
+    }
+
+    try {
+      const tasks = await this.model.filterByName(query);
+      res.status(200).send(tasks);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: 'Failed to fetch tasks' });
+    }
+  }
+
   async update(req, res) {
     const { id } = req.params;
     // Validate the ID

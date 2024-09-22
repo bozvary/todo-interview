@@ -39,6 +39,10 @@ class Task {
     return this.taskCollection.findOne({ _id: new ObjectId(id) });
   }
 
+  async filterByName(query) {
+    return await this.taskCollection.find(query).toArray();
+  }
+
   async update(id, updateData) {
     // TODO: we can add updatedBy field if we define user layer
     updateData.updatedAt = new Date();
