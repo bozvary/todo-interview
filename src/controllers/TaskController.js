@@ -123,8 +123,12 @@ class TaskController {
     
 
     try {
-      await this.model.updateStatus(id, status, updateFields);
-      res.status(200).send({ message: 'Task status updated' });
+      const result = await this.model.updateStatus(id, status, updateFields);
+      if (result?.modifiedCount) {
+        res.status(200).send({ message: 'Task status updated' });
+      } else {
+        res.status(404).send({ error: 'Task not found' });
+      }
     } catch (error) {
       console.error(error)
       res.status(500).send({ error: 'Failed to update task status' });
