@@ -1,6 +1,21 @@
 // models/Task.js
 const { ObjectId } = require('mongodb');
 
+/*
+_id, autogen
+name
+description
+status
+startData
+dueDate
+doneDate
+createdAt
+updatedAt
+
+
+
+*/
+
 class Task {
   constructor(db) {
     // Define a property that connected to the 'tasks' collection

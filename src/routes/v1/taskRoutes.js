@@ -14,14 +14,14 @@ const createTaskRoutes = (db) => {
   const taskController = new TaskController(taskModel);
 
   // Validate the request with the taskScheme to prevent injecting invalid data
-  router.post('/', taskController.validateRequest(taskSchema), taskController.createTask.bind(taskController));
+  router.post('/', taskController.validateRequest(taskSchema), taskController.create.bind(taskController));
   // We can use validator to define a schema for the query adn validate the input to prevent various vulnerabilities, e.g. invalid input, injection attacks, data integrity, limit, performance issue. 
-  router.get('/', taskController.getAllTasks.bind(taskController));
+  router.get('/', taskController.getAll.bind(taskController));
   // Validate the request, we can restrict some update by key if we do not want to provide ability to change e.g. status for status changes use the 'status' endpoint
-  router.put('/:id', taskController.validateRequest(schemaUpdate), taskController.updateTask.bind(taskController));
-  router.delete('/:id', taskController.deleteTask.bind(taskController));
+  router.put('/:id', taskController.validateRequest(schemaUpdate), taskController.update.bind(taskController));
+  router.delete('/:id', taskController.delete.bind(taskController));
   // Update the status of the tasks based on the requirement
-  router.patch('/:id/status', taskController.updateTaskStatus.bind(taskController));
+  router.patch('/:id/status', taskController.updateStatus.bind(taskController));
 
   return router;
 };

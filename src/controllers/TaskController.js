@@ -1,8 +1,8 @@
 // controllers/TaskController.js
 
 class TaskController {
-  constructor(taskModel) {
-    this.taskModel = taskModel;
+  constructor(model) {
+    this.model = model;
   }
 
   // It is used to validate the differnet JOI schemas, and return error if the validation failed.
@@ -16,11 +16,11 @@ class TaskController {
     };
   }
 
-  async createTask(req, res) {
+  async create(req, res) {
     try {
       // We create a new task based on the req.body, that is already validated by JOI
       const taskData = req.body;
-      const task = await this.taskModel.create(taskData);
+      const task = await this.model.create(taskData);
       // Send back the created response, as it includes the created id, or we can send back only the id field
       res.status(201).send(task);
     } catch (error) {
@@ -29,7 +29,8 @@ class TaskController {
     }
   }
 
-  async getAllTasks(req, res) {
+  // TODO: Fetch project with parameter 'include'. If keys are defined in includes, that case we send back the included field as an object e.g include=tasks, send back tasks[{fullObject}, {fullObject}] insteadof tasks[taskId1, taskId2], this way we can prevent extra subqueries from the client side if they need to show the task details in the project.
+  async getAll(req, res) {
     // Define sortable columns, so as the app grows with extra field, we can extend the sorting with ease
     const sortableColumns = ['id','startDate','dueDate','doneDate'];
     // Setup default pagination config to prevent long results, more complex pagination can be implemented here to maange next/previous page
@@ -64,7 +65,7 @@ class TaskController {
 
     try {
       // Fetch all tasks that meet the requirement status, search, sorting, pagination
-      const tasks = await this.taskModel.findAll(query, sortOption, +per_page, skip);
+      const tasks = await this.model.findAll(query, sortOption, +per_page, skip);
       res.status(200).send(tasks);
     } catch (error) {
       console.error(error)
@@ -72,13 +73,13 @@ class TaskController {
     }
   }
 
-  async updateTask(req, res) {
+  async update(req, res) {
     const { id } = req.params;
     const updateData = req.body;
 
-    // Limit the updateable fields e.g remove status field. Status field cannot be updated directly. Or need extra validation. Prepared in JOI schema validation
+    // !!!! Limit the updateable fields e.g remove status field. Status field cannot be updated directly. Or need extra validation. Prepared in JOI schema validation
     try {
-      const result = await this.taskModel.update(id, updateData);
+      const result = await this.model.update(id, updateData);
       if (result?.modifiedCount) {
         res.status(200).send({ message: 'Task updated' });
       } else {
@@ -90,11 +91,11 @@ class TaskController {
     }
   }
 
-  async deleteTask(req, res) {
+  async delete(req, res) {
     const { id } = req.params;
     try {
       // try to delete the task if its exists
-      const result = await this.taskModel.delete(id);
+      const result = await this.model.delete(id);
       if (result?.deletedCount) {
         res.status(200).send({ message: 'Task deleted' });
       } else {
@@ -107,7 +108,7 @@ class TaskController {
   }
 
   // reset a task from “done” to “to-do”, should reset “start” and “done” dates
-  async updateTaskStatus(req, res) {
+  async updateStatus(req, res) {
     const { id } = req.params;
     const { status } = req.body;
     const updateFields = {};
@@ -122,7 +123,7 @@ class TaskController {
     
 
     try {
-      await this.taskModel.updateStatus(id, status, updateFields);
+      await this.model.updateStatus(id, status, updateFields);
       res.status(200).send({ message: 'Task status updated' });
     } catch (error) {
       console.error(error)
