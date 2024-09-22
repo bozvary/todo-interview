@@ -5,12 +5,16 @@ const { MongoClient } = require('mongodb');
 const createTaskRoutes = require('./routes/v1/taskRoutes');
 const createProjectRoutes = require('./routes/v1/projectRoutes');
 const errorHandler = require('./middlewares/errorHandler');
+const setupSwagger = require('../swagger');
 
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+
+// Setup Swagger
+setupSwagger(app);
 
 MongoClient.connect(process.env.MONGODB_URI)
   .then(client => {

@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  title: Project API
+  version: 1.0.0
+paths:
+  /projects:
+    get:
+      tags:
+        - Projects
+      summary: Fetch all projects
+      description: Retrieve a list of all projects
+      responses:
+        '200':
+          description: A list of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: '605c72bcf12e2c1f88e0b1e2'
+                    name:
+                      type: string
+                      example: 'New project'
+                    description:
+                      type: string
+                      example: 'Project description'
+                    startDate:
+                      type: string
+                      format: date
+                      example: '2024-09-22'
+                    dueDate:
+                      type: string
+                      format: date
+                      example: '2024-09-28'
+                    tasks:
+                      type: array
+                      items:
+                        type: string
+                        example: '66f072036eeba15767450dc2'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Failed to fetch projects'
