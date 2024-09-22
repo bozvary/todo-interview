@@ -39,7 +39,8 @@ const schema = Joi.object({
       'date.iso': 'Start date must be a valid ISO 8601 date',
       'date.base': 'Start date must be a valid date',
     })
-}).strict(); // Disallow any additional fields
+})
+.strict(); // Disallow any additional fields
 
 const schemaUpdate = Joi.object({
   name: Joi.string()
@@ -61,9 +62,10 @@ const schemaUpdate = Joi.object({
       'string.max': 'Task description must be at most 255 characters',
     }),
   // This can be constant to manage the statuses
-  status: Joi.string() // We might need to add/remove the option
+  status: Joi.forbidden(),
+  /*Joi.string() // We might need to add/remove the option
     .valid('to-do', 'done')
-    .optional(),
+    .optional(),*/
   startDate: Joi.date().options({ convert: true }).optional(),
   dueDate: Joi.date().options({ convert: true }).greater(Joi.ref('startDate')).optional(),
   doneDate: Joi.date().options({ convert: true }).optional()

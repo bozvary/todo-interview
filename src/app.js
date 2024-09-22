@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-MongoClient.connect(process.env.MONGOGB_URI, { useUnifiedTopology: true })
+MongoClient.connect(process.env.MONGODB_URI)
   .then(client => {
     const db = client.db('todoList');
     // This can be organised in a differnet way
