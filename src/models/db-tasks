@@ -1,0 +1,30 @@
+TASKS:
+
+create a new MongoDB collection: tasks
+1. define data structure for MongoDB documents in tasks collection (according to requirements below)
+✅ a. create a task
+✅ b. list all tasks
+✅ c. edit a task
+✅ d. delete a task
+✅ e. mark a task as to-do/done
+✅ f. filter tasks by status
+✅ g. search tasks by name
+✅ h. sort tasks by dates
+✅  i. start date
+✅  ii. due date
+✅  iii. done date
+
+
+1. create a new MongoDB collection: projects
+2. define data structure for MongoDB documents in projects collection (according to requirements below)
+3. create endpoints w/ NodeJS and express to:
+a. create a project
+b. list all projects
+c. edit a project
+d. delete a project
+4. assign a task to a project
+5. filter tasks by project name
+6. sort projects by dates
+a. start date
+b. due date
+

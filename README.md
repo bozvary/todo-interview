@@ -3,7 +3,7 @@
 ## Overview
 
 The project is a "Simple Tasks & Projects API" developed using Node.js, ExpressJs and MongoDB. 
-The API allows you to manage tasks and projects, including features like creating, editing, deleting, and filtering tasks and projects, as well as assigning tasks to projects.
+The API allows to manage tasks and projects, including features like creating, editing, deleting, sorting, and filtering tasks and projects, and assigning tasks to projects.
 
 
 ### Key Features:
@@ -62,14 +62,14 @@ Check SWAGGER API for more details
 ### Tasks Endpoints
 Method		Endpoint								Description
 
-POST			/{v}/api/tasks							Create a new task
-GET				/{v}/api/tasks							Get/List all tasks
-PUT				/{v}/api/tasks/:id					Edit an existing task
-DELETE		/{v}/api/tasks/:id					Delete a task
-PATCH			/{v}/api/tasks/:id/status		Mark a task as to-do/done
-GET				/{v}/api/tasks?status=done	Filter tasks by status
-GET				/{v}/api/tasks?search=name	Search tasks by name
-GET				/{v}/api/tasks?sort=date		Sort tasks by start, due, or done dates
+POST			/api/{v}/tasks							Create a new task
+GET			/api/{v}/tasks							Get/List all tasks
+PUT			/api/{v}/tasks/:id					Edit an existing task
+DELETE		/api/{v}/tasks/:id					Delete a task
+PATCH			/api/{v}/tasks/:id/status		   Mark a task as to-do/done
+GET			/api/{v}/tasks?status=done	      Filter tasks by status
+GET			/api/{v}/tasks?search=name	      Search tasks by name
+GET			/api/{v}/tasks?sort=date		   Sort tasks by start, due, or done dates
 
 
 ### Projects Endpoints
@@ -89,7 +89,7 @@ Method		Endpoint								Description
 Create a new task
 
   ```bash
-   curl -X POST http://localhost:3000/api/tasks \
+   curl -X POST http://localhost:3000/api/v1/tasks \
 		-H "Content-Type: application/json" \
 		-d '{
 		  "name": "Create containers",
