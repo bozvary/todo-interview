@@ -5,6 +5,10 @@ class TaskController {
     this.model = model;
   }
 
+  isValidObjectId(id) {
+    return /^[0-9a-fA-F]{24}$/.test(id);
+  }
+
   // It is used to validate the differnet JOI schemas, and return error if the validation failed.
   validateRequest(schema) {
     return (req, res, next) => {
@@ -75,6 +79,10 @@ class TaskController {
 
   async update(req, res) {
     const { id } = req.params;
+    // Validate the ID
+    if (!this.isValidObjectId(id)) {
+      return res.status(400).send({ error: 'Invalid ID format. ID must be a 24-character hex string.' });
+    }
     const updateData = req.body;
 
     // !!!! Limit the updateable fields e.g remove status field. Status field cannot be updated directly. Or need extra validation. Prepared in JOI schema validation
@@ -93,6 +101,10 @@ class TaskController {
 
   async delete(req, res) {
     const { id } = req.params;
+    // Validate the ID
+    if (!this.isValidObjectId(id)) {
+      return res.status(400).send({ error: 'Invalid ID format. ID must be a 24-character hex string.' });
+    }
     try {
       // try to delete the task if its exists
       const result = await this.model.delete(id);
@@ -110,8 +122,18 @@ class TaskController {
   // reset a task from “done” to “to-do”, should reset “start” and “done” dates
   async updateStatus(req, res) {
     const { id } = req.params;
+    // Validate the ID
+    if (!this.isValidObjectId(id)) {
+      return res.status(400).send({ error: 'Invalid ID format. ID must be a 24-character hex string.' });
+    }
     const { status } = req.body;
     const updateFields = {};
+
+    const validStatuses = ['to-do', 'done'];
+    // Validate status
+    if (status !== 'to-do' && status !== 'done') {
+      return res.status(400).send({ error: 'Invalid status value.', validStatuses});
+    }
 
     if (status === 'to-do') {
       updateFields.startDate = null;

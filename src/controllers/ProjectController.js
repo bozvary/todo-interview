@@ -5,6 +5,10 @@ class ProjectController {
     this.model = model;
   }
 
+  isValidObjectId(id) {
+    return /^[0-9a-fA-F]{24}$/.test(id);
+  }
+
   // It is used to validate the differnet JOI schemas, and return error if the validation failed.
   validateRequest(schema) {
     return (req, res, next) => {
@@ -74,6 +78,10 @@ class ProjectController {
 
   async update(req, res) {
     const { id } = req.params;
+    // Validate the ID
+    if (!this.isValidObjectId(id)) {
+      return res.status(400).send({ error: 'Invalid ID format. ID must be a 24-character hex string.' });
+    }
     const updateData = req.body;
 
     // Limit the updateable fields??
@@ -92,6 +100,10 @@ class ProjectController {
 
   async delete(req, res) {
     const { id } = req.params;
+    // Validate the ID
+    if (!this.isValidObjectId(id)) {
+      return res.status(400).send({ error: 'Invalid ID format. ID must be a 24-character hex string.' });
+    }
     try {
       // try to delete the project if its exists
       const result = await this.model.delete(id);
@@ -108,6 +120,10 @@ class ProjectController {
 
   async assignTaskToProject(req, res) {
     const { projectId, taskId } = req.params;
+    // Validate the ID
+    if (!this.isValidObjectId(projectId) || !this.isValidObjectId(taskId)) {
+      return res.status(400).send({ error: 'Invalid ID format. ID must be a 24-character hex string.' });
+    }
     try {
       const result = await this.model.assignTaskToProject(projectId, taskId);
       if (result.modifiedCount === 0) {
@@ -122,6 +138,10 @@ class ProjectController {
   async moveTaskToProject(req, res) {
     console.log("moveTaskToProject")
     const { currentProjectId, newProjectId, taskId } = req.params;
+    // Validate the ID
+    if (!this.isValidObjectId(currentProjectId) || !this.isValidObjectId(newProjectId) || !this.isValidObjectId(taskId)) {
+      return res.status(400).send({ error: 'Invalid ID format. ID must be a 24-character hex string.' });
+    }
     try {
       const result = await this.model.moveTaskToProject(currentProjectId, newProjectId, taskId);
       res.status(200).send({ message: 'Task moved successfully' });
