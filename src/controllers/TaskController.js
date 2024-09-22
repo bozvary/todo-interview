@@ -34,7 +34,7 @@ class TaskController {
     // Define sortable columns, so as the app grows with extra field, we can extend the sorting with ease
     const sortableColumns = ['id','startDate','dueDate','doneDate'];
     // Setup default pagination config to prevent long results, more complex pagination can be implemented here to maange next/previous page
-    const { status, search, order_by, page = 1, per_page = 10 } = req.query;
+    const { status, search, order_by, page = 1, per_page = 50 } = req.query;
     const query = {};
     const sortOption = {};
 

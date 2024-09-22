@@ -13,8 +13,6 @@ const createProjectRoutes = (db) => {
   // Project Controller manages the CRUD operations and extra functionialities
   const controller = new ProjectController(projectModel);
 
-  console.log("controller")
-  console.log(controller.assignTaskToProject)
   // Assign atask to project
   router.post('/:projectId/tasks/:taskId', controller.assignTaskToProject.bind(controller));
   // Move Task from one project to another

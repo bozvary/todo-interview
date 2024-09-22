@@ -33,7 +33,7 @@ class ProjectController {
     // Define sortable columns, so as the app grows with extra field, we can extend the sorting with ease
     const sortableColumns = ['id','startDate','dueDate','doneDate','createdAt'];
     // Setup default pagination config to prevent long results, more complex pagination can be implemented here to maange next/previous page
-    const { status, search, order_by, page = 1, per_page = 10 } = req.query;
+    const { status, search, order_by, page = 1, per_page = 50 } = req.query;
     const query = {};
     const sortOption = {};
 
@@ -121,11 +121,9 @@ class ProjectController {
 
   async moveTaskToProject(req, res) {
     console.log("moveTaskToProject")
-    console.log("req.params", req.params)
     const { currentProjectId, newProjectId, taskId } = req.params;
     try {
       const result = await this.model.moveTaskToProject(currentProjectId, newProjectId, taskId);
-      console.log(result)
       res.status(200).send({ message: 'Task moved successfully' });
     } catch (error) {
       console.log(error)
